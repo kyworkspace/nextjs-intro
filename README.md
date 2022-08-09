@@ -1,3 +1,6 @@
+```
+npx create-next-app next-intro
+```
 # Next JS Introduction
 
 1. 이건 프레임워크 이다!!!!
@@ -32,3 +35,13 @@ import styles from "./NavBar.module.css"
 
 - 페이지가 랜더링되기 전에 먼저 바라보는 파일이라고 보면된다.
 - 글로벌로 적용할 상태나 HTML 을 적용할때 쓰면 된다.
+
+
+### public
+ - public 폴더에 들어가있는 파일을 리소스로 가져올려고 하는 경우 경로를 전부 적을 필요없다.
+ - 해당 파일명만 가지고 불러오면 된다.
+
+
+ ### next.config   
+    - redirect : 특정 주소가 들어왔을때 다른 주소로 리다이렉트 시키고, 영구지속시킬지 여부를 정한다.
+    - rewrites : 특정 주소를 받으면 사용자가 URL이 바뀌는 것을 확인할 수 있는 것이 아닌, 지정된 dest의 URL를 실행한다. URL을 마스킹 한다고 보면 된당
