@@ -1,5 +1,7 @@
 
 import Head from 'next/head'; //웹 헤드
+import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import SEO from '../components/SEO';
 
@@ -7,24 +9,34 @@ import SEO from '../components/SEO';
 
 
 
-export default function Home() {
-    const [movies, setMovies] = useState();
+export default function Home({ results }) {
 
-    useEffect(() => {
-        (async () => {
-            const { results } = await (await fetch(`/api/movies`)).json()
-            setMovies(results)
-        })();
-    }, []);
+    const router = useRouter();
+    const onClick = (id, title) => {
+        //as 부분에 원하는 URL을 사용하면 해당 URL형태로 마스킹되어 쿼리정보가 보이지 않도록 한다.
+        router.push({
+            pathname: `/movies/${title}/${id}`,
+        })
+    }
+
 
     return (
         <div className='container'>
             <SEO title={"Home"} />
-            {!movies && <h4>Loading...</h4>}
-            {movies?.map(movie => (
-                <div className='movie' key={movie.id}>
-                    <img src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`} />
-                    <h4>{movie.original_title}</h4>
+
+            {results?.map(movie => (
+                <div onClick={() => onClick(movie.id, movie.original_title)} className='movie' key={movie.id}>
+                    <img src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`} />
+                    <h4>
+                        <Link href={{
+                            pathname: `/movies/${movie.original_title}/${movie.id}`,
+                        }}
+                        >
+                            <a>
+                                {movie.original_title}
+                            </a>
+                        </Link>
+                    </h4>
                 </div>
             ))}
             <style jsx>{`
@@ -33,6 +45,9 @@ export default function Home() {
             grid-template-columns: 1fr 1fr;
             padding: 20px;
             gap: 20px;
+            }
+            .movie{
+                cursor : pointer
             }
             .movie img {
             max-width: 100%;
@@ -50,4 +65,22 @@ export default function Home() {
         `}</style>
         </div>
     )
+}
+
+
+export async function getServerSideProps() {
+    /**
+     * 함수명은 고정이다. 
+     * 무엇을 실행하던지 이 함수 내에서 실행되는 내용은 서버에서 실행된다.
+     * 백엔드에서만 실행되는 내용이다.
+     * */
+    //주소를 사용할때는 절대주소를 넣어야 한다. 백단에서 실행되기 때문이다.
+    const { results } = await (await fetch(`http://localhost:3000/api/movies`)).json();
+    //아래와 같이 실행하면 실행컴포넌트에서 props로 가져올수 있다.
+    return {
+        props: {
+            results
+        }
+    }
+
 }

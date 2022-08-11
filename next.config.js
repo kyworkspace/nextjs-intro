@@ -21,7 +21,11 @@ module.exports = {
       {
         source: "/api/movies",
         destination: `http://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}&language=ko-KR&page=1`
-      }
+      },
+      {
+        source: "/api/movies/:id",
+        destination: `http://api.themoviedb.org/3/movie/:id?api_key=${API_KEY}`
+      },
     ]
   }
 }
